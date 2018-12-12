@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 
 // GET requests to /restaurants => return 10 restaurants
-app.get("/restaurants", (req, res) => {
+/*app.get("/restaurants", (req, res) => {
   Restaurant.find()
     // we're limiting because restaurants db has > 25,000
     // documents, and that's too much to process/return
@@ -33,6 +33,25 @@ app.get("/restaurants", (req, res) => {
       console.error(err);
       res.status(500).json({ message: "Internal server error" });
     });
+});*/
+
+app.get('/restaurants', (req, res) => {
+  const filters = {};
+  const queryableFields = ['cuisine', 'borough'];
+  queryableFields.forEach(field => {
+      if (req.query[field]) {
+          filters[field] = req.query[field];
+      }
+  });
+  Restaurant
+      .find(filters)
+      .then(Restaurants => res.json(
+          Restaurants.map(restaurant => restaurant.serialize())
+      ))
+      .catch(err => {
+          console.error(err);
+          res.status(500).json({message: 'Internal server error'})
+      });
 });
 
 // can also request by ID
