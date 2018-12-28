@@ -26,7 +26,7 @@ function seedRestaurantData() {
 
   for (let i=1; i<=10; i++) {
     seedData.push(generateRestaurantData());
-  }r
+  }
   // this will return a promise
   return Restaurant.insertMany(seedData);
 }
